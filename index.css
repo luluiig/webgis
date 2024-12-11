@@ -1,0 +1,36 @@
+.sysTitle{
+    width: 100vw;
+    height: 5vh;
+    background: #4a6390;
+    font-size: 25px;
+    font-weight: 800;
+    font-family: cursive;
+    color: #f5f5f5;
+    line-height: 43px;
+    padding-left: 15px;
+}
+.map{
+    width: 100vw;
+    height: 95vh;
+}
+.form-inline{
+    position: absolute;
+    top: 14vh;
+    right: 1vw;
+    background: #fff;
+    padding: 5px;
+}
+.meun{
+    position: absolute;
+    top: 6vh;
+    left: 4vw;
+    background: #fff;
+    padding: 5px;
+}
+.legend{
+    width: 180px;
+    height: 138px;
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+}

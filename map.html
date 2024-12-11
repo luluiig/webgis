@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>气象灾害预警</title>
+    <!-- <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script> -->
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="css/index.css" type="text/css">
+    <link rel="stylesheet" href="./css/map.css" type="text/css">
+    <link rel="stylesheet" href="./plugins/jqueryDialog/jDialog/jDialog.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script
+        src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://trojx.oss-cn-hangzhou.aliyuncs.com/kriging-original.js"></script>
+    <script src="https://trojx.oss-cn-hangzhou.aliyuncs.com/ol-debug.js"></script>
+    <script src="plugins/jquery-1.8.2.js"></script>
+    <script src="plugins/jqueryDialog/jDialog.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+
+</head>
+
+<body>
+    <div class="sysTitle">四川阿坝州气象灾害预警系统</div>
+    <div id="map" class="map">
+        <div id="mouse-position"></div>
+    </div>
+    <div class="map_switch">
+        <div class="map_switch_item" id="img">
+            <div class="hoverType">
+                <div class="imgType"></div>
+                <div class="map_bom">卫星图</div>
+            </div>
+        </div>
+        <div class="map_switch_item" id="vec">
+            <div class="hoverType" style="background-color:#c6e0f7;">
+                <div class="vecType"></div>
+                <div class="map_bom">街道图</div>
+            </div>
+        </div>
+    </div>
+    <form class="form-inline">
+        <label>量算工具:</label>
+        <select id="type" style="height:25px;">
+            <option value="length">请选择</option>
+            <option value="length">量算距离</option>
+            <option value="area">量算面积</option>
+        </select>
+        <button type="button" id="clearStatus">清除</button>
+    </form>
+
+<!-- 搜索功能部分 -->
+    <form class="form-inline" style="margin-top: 60px;">
+    <label>搜索地点:</label>
+    <input type="text" id="searchInput" placeholder="输入地点名称" style="height:25px; margin-right: 10px;">
+    <button type="button" id="searchButton">搜索</button>
+</form>
+
+</div>
+    <div class="meun">
+        <button type="button" id="yqfx">雨情分析</button>
+        <button type="button" id="tj">统计</button>
+    </div>
+    <div id="legend" class="legend">
+
+    </div>
+    <script src="./js/statis.js"></script>
+    <script src="./js/kriging.js"></script>
+    <script src="./js/heatmap.js"></script>
+    <script src="./js/map.js"></script>
+    <!-- <script type="text/javascript">
+        window.onload = function () {
+            //getMapPoint();
+            drawMapTuliMethod();
+        }
+        /*
+         * 图例数据
+         */
+        var dataObj = [{
+            tname: '国家级文物保护建筑',
+            color: '#365e96',
+        }, {
+            tname: '省级文物保护建筑',
+            color: '#d1702f',
+        }, {
+            tname: '市级级文物保护建筑',
+            color: '#4fa1dc',
+        }, {
+            tname: '区县级文物保护建筑',
+            color: '#368829',
+        }]
+        /*
+         * 图例经纬度坐标,地图绑定了单击事件
+         * 单击返回经纬度并重新绘制canvas
+         */
+        var removeData = {
+            tx: 103.560166,
+            ty: 31.785688
+        }
+        var canvas = document.createElement('canvas');
+
+        //绘制图例
+        function drawMapTuliMethod() {
+            var layers = new ol.layer.Vector({
+                type: 'tuli',
+                source: new ol.source.Vector(),
+                zIndex: 9
+            })
+            var shape = new ol.Feature({
+                geometry: new ol.geom.Point([removeData.tx, removeData.ty])
+            });
+
+            var ctx = canvas.getContext("2d");
+            var yheight = 30;
+            yheight += dataObj.length * 27; //计算canvas高度
+            canvas.width = 180;
+            canvas.height = yheight;
+
+            /*设置图例样式*/
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, 200, yheight); //绘制底图
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#000";
+            ctx.fillText('图例', canvas.width / 2.5, 25);
+            for (var i = 0; i < dataObj.length; i++) {
+                //实现文字前面带色块
+                ctx.fillStyle = dataObj[i].color; //块颜色
+                ctx.fillRect(10, 60 + (i - 1) * 25, 15, 15); //颜色块：x,y,w,h
+
+                ctx.font = "12px Arial";
+                // ctx.fillStyle = "#555";
+                ctx.fillText(dataObj[i].tname, 30, 72 + (i - 1) * 25); //文字
+
+                //添加图片方法一，实现文字前面带图片，移动图例不会出现闪烁
+                //drawImg_first('xiushan.png', i); 
+
+                //添加图片方法二，移动图例会出现闪烁
+                //drawImg_Second(ctx, 'xiushan.png', i);   
+            }
+            $("#legend").append(canvas);
+        }
+
+        /*
+         * 将绘制完成的图片添加到canvas上
+         * @imgObj：图片对象
+         * @p：循环序号，确定图片坐标
+         */
+        function drawTuliImage(imgObj, p) {
+            var ctxImge = canvas.getContext("2d");
+            ctxImge.drawImage(imgObj, 5, 30 + (p * 25), 24, 26);
+        }
+
+        /*
+         * 绘制图例上的图片，方法一
+         * 此方法能解决重绘canvas时图片闪烁留白的问题
+         * @imgs：图片名称
+         * @p:序号
+         * @complete：HTMLImageElement对象的一个属性，可以判断图片加载完成
+         */
+        function drawImg_first(imgs, p) {
+            var imgObj = new Image();
+            imgObj.src = 'img/' + imgs;
+            //如果图片加载完成
+            if (imgObj.complete) {
+                drawTuliImage(imgObj, p);
+            } else {
+                //onload：重绘，重新加载
+                imgObj.onload = function () {
+                    drawTuliImage(imgObj, p);
+                };
+                //加载失败
+                imgObj.onerror = function () {
+                    console.log('canvas图片加载失败,请重试！')
+                };
+            }
+        }
+
+        /*
+         * 添加数据前面的图片，方法二
+         * 此方法绘制图片会出现闪烁留白情况，
+         * @ctx：绘图环境
+         * @imgs:图片名称
+         * @p:循环序号
+         */
+        function drawImg_Second(ctx, imgs, p) {
+            var imgObj = new Image();
+            imgObj.src = 'img/' + imgs;
+            imgObj.onload = function () {
+                ctx.drawImage(imgObj, 5, 30 + (p * 25), 25, 27);
+            }
+        }
+
+        /*
+         * 添加图例之前删除原来
+         * 引用类型。length会变化,for循环倒着删除
+         * @deType:要删除的覆盖物名称
+         */
+        function addNewsChartsDelectOring(deType) {
+            var layersArr = map.getLayers().getArray(); //获取所有覆盖物
+            //移除全部
+            if (deType == 'all') {
+                for (var i = layersArr.length - 1; i >= 0; i--) {
+                    var ltype = layersArr[i].get('type');
+                    if (ltype == 'tuli') map.removeLayer(layersArr[i]);
+                }
+                return;
+            }
+            //移除具体
+            else {
+                for (var i = layersArr.length - 1; i >= 0; i--) {
+                    var ltype = layersArr[i].get('type');
+                    if (ltype == deType) map.removeLayer(layersArr[i]);
+                }
+                return;
+            }
+        }
+
+        //地图单击事件
+        function getMapPoint() {
+            map.on('click', function (evt) {
+                var point = evt.coordinate; //鼠标单击点坐标
+                removeData.tx = point[0];
+                removeData.ty = point[1];
+                addNewsChartsDelectOring('all');
+                drawMapTuliMethod();
+            });
+        }
+    </script> -->
+</body>
+
+</html>

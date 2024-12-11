@@ -1,0 +1,145 @@
+body {
+    margin:0px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+ }
+ .ol-attribution {
+     visibility: hidden;
+ }
+ .map_switch {
+     position: absolute;
+     top: 6vh;
+     right: 1vw;
+     font-family: 宋体;
+     font-size: 12px;
+     z-index: 999;
+     width: auto;
+ }
+ .map_switch_item {
+     width: 58px;
+     height: 60px;
+     border: 1px solid #b1b1b1;
+     text-align: center;
+     float: right;
+     display: inline;
+     margin-left: 10px;
+     background-color: #fff;
+     cursor: pointer;
+     padding: 2px;
+ }
+ .hoverType {
+     width: 56px;
+     height: 58px;
+     background-color: #fff;
+     margin: auto;
+ }
+ .hoverType:hover {
+     width: 56px;
+     height: 58px;
+     background-color: #c6e0f7;
+     margin: auto;
+ }
+ .vecType {
+     width: 56px;
+     height: 38px;
+     background: url(indexImage.png) no-repeat -154px -202px;
+ }
+ .imgType {
+     width: 56px;
+     height: 38px;
+     background: url(indexImage.png) no-repeat -154px -155px;
+ }
+ .map_bom {
+     height: 22px;
+     line-height: 22px;
+     color: #333333;
+ }
+ #mouse-position {
+     float: left;
+     position: absolute;
+     bottom: -5px;
+     width: 100%;
+     height: 30px;
+     /* 将z-index设置为显示在地图上层 */
+     z-index: 100;
+     background: rgba(0,0,0,0.5);
+     color: #ffffff;
+     font-size: 16px;
+     font-family: "微软雅黑";
+ }
+ .ol-custom-scaleline {
+     border-radius: 4px;
+     bottom: -3px;
+     /* left: 8px; */
+     cursor: default;
+     position: absolute;
+     padding: 2px;
+     right: 10px;
+     z-index: 100;
+ }
+ .ol-custom-scaleline .ol-custom-scaleline-inner {
+     width: 112px !important;
+     border: 1px solid #ddd;
+     border-top: none;
+     color: #ddd;
+     font-size: 13px;
+     text-align: center;
+     margin: 1px;
+     will-change: contents, width;
+ }
+ .ol-overviewmap {
+     left: .5em;
+     bottom: 2.5em;
+ }
+.tooltip {
+ position: relative;
+ background: rgba(0, 0, 0, 0.5);
+ border-radius: 4px;
+ color: white;
+ padding: 4px 8px;
+ opacity: 0.7;
+ white-space: nowrap;
+}
+.tooltip-measure {
+ opacity: 1;
+ font-weight: bold;
+}
+.tooltip-static {
+ background-color: #ffcc33;
+ color: black;
+ border: 1px solid white;
+}
+.tooltip-measure:before,
+.tooltip-static:before {
+ border-top: 6px solid rgba(0, 0, 0, 0.5);
+ border-right: 6px solid transparent;
+ border-left: 6px solid transparent;
+ content: "";
+ position: absolute;
+ bottom: -6px;
+ margin-left: -7px;
+ left: 50%;
+}
+/* 搜索结果文字标注样式 */
+.search-tooltip {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    white-space: nowrap;
+}
+
+/* 搜索结果红点标注样式 */
+.red-dot {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%; /* 圆形样式 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip-static:before {
+ border-top-color: #ffcc33;
+} 
